@@ -1,0 +1,10 @@
+Accuracy: 0.9231
+Macro F1: 0.9184
+              precision    recall  f1-score   support
+
+      Merkel       0.92      0.96      0.94        71
+         SPD       0.93      0.87      0.90        46
+
+    accuracy                           0.92       117
+   macro avg       0.92      0.91      0.92       117
+weighted avg       0.92      0.92      0.92       117

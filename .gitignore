@@ -1,0 +1,6 @@
+# Ignore large CSVs
+data/filtered/df_spd.csv
+data/final/unbalanced/train.csv
+
+# Ignore model weights
+models/**/model.safetensors
