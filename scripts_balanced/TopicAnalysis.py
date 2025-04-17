@@ -105,4 +105,4 @@ plt.tight_layout()
 plt.savefig(f"{results_dir}/mean_summary_plot.png", dpi=300)
 plt.show()
 
-print("\n📄 Summary of all topics saved successfully.")
+print("\n Summary of all topics saved successfully.")

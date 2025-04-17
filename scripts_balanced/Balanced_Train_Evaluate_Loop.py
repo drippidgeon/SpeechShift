@@ -24,12 +24,12 @@ all_results = []
 for run in range(1, 6):
     print(f"\n🔁 Starting Run {run}/5")
 
-    # === 1. Balance data with different random sample ===
+    # 1. Balance data with different random sample
     df_spd_sampled = df_spd.sample(n=len(df_merkel), random_state=run)
     df_all = pd.concat([df_merkel, df_spd_sampled], ignore_index=True)
     df_all = df_all[["text", "label"]]
 
-    # === 2. Train/test split ===
+    # 2. Train/test split
     train_df, test_df = train_test_split(
         df_all, test_size=0.3, stratify=df_all["label"], random_state=run
     )
@@ -50,10 +50,10 @@ for run in range(1, 6):
     train_ds.set_format("torch", columns=["input_ids", "attention_mask", "label"])
     test_ds.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
-    # === 3. Load model ===
+    # 3. Load model
     model = BertForSequenceClassification.from_pretrained("bert-base-german-cased", num_labels=2)
 
-    # === 4. Training arguments ===
+    # 4. Training arguments
     output_dir = f"../models/bert-balanced-run{run}"
     training_args = TrainingArguments(
         output_dir=output_dir,
@@ -69,7 +69,7 @@ for run in range(1, 6):
         load_best_model_at_end=False,
     )
 
-    # === 5. Trainer ===
+    # 5. Trainer
     trainer = Trainer(
         model=model,
         args=training_args,
@@ -78,12 +78,12 @@ for run in range(1, 6):
         tokenizer=tokenizer,
     )
 
-    # === 6. Train & Save  model ===
+    # 6. Train & Save  model
     trainer.train()
     model.save_pretrained(output_dir)
     tokenizer.save_pretrained(output_dir)
 
-    # === 7. Evaluate ===
+    # 7. Evaluate
     pred_output = trainer.predict(test_ds)
     y_true = pred_output.label_ids
     y_pred = np.argmax(pred_output.predictions, axis=1)
@@ -99,11 +99,11 @@ for run in range(1, 6):
         "f1_weighted": f1_weighted
     })
 
-    print(f"✅ Run {run} complete: Accuracy={acc:.4f}, F1_macro={f1_macro:.4f}")
+    print(f"Run {run} complete: Accuracy={acc:.4f}, F1_macro={f1_macro:.4f}")
 
 # Save results to CSV
 results_df = pd.DataFrame(all_results)
 os.makedirs("../results/balanced data", exist_ok=True)
 results_df.to_csv("../results/balanced data/balanced_runs_summary.csv", index=False)
-print("\n📄 All runs complete! Summary:")
+print("\n All runs complete! Summary:")
 print(results_df.describe())

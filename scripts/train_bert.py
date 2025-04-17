@@ -72,11 +72,11 @@ trainer.train()
 
 # Evaluate model
 eval_results = trainer.evaluate()
-print("✅ Evaluation results:", eval_results)
+print("Evaluation results:", eval_results)
 
 # Save final model
 os.makedirs("../models/bert-merkel-spd-final", exist_ok=True)
 model.save_pretrained("../models/bert-merkel-spd-final")
 tokenizer.save_pretrained("../models/bert-merkel-spd-final")
 
-print("✅ Training completed and model saved.")
+print("Training completed and model saved.")

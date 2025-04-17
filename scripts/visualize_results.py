@@ -8,31 +8,31 @@ from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay, accuracy_s
 from transformers import BertForSequenceClassification, BertTokenizer, Trainer, TrainingArguments
 from datasets import Dataset
 
-# === Ensure results folder exists ===
+# Ensuring results folder exists
 os.makedirs("../results/unbalanced data", exist_ok=True)
 
-# === Load model and tokenizer ===
+# Load model and tokenizer
 model_path = "../models/bert-merkel-spd-final"
 model = BertForSequenceClassification.from_pretrained(model_path)
 tokenizer = BertTokenizer.from_pretrained(model_path)
 
-# === Load test data ===
+# Load test data
 df_test = pd.read_csv("../data/final/unbalanced data/test.csv")
 ds_test = Dataset.from_pandas(df_test)
 ds_test = ds_test.map(lambda x: tokenizer(x["text"], truncation=True, padding=True, max_length=512), batched=True)
 ds_test.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
-# === Trainer for inference ===
+# Trainer for inference
 training_args = TrainingArguments(output_dir="./tmp", per_device_eval_batch_size=8)
 trainer = Trainer(model=model, args=training_args)
 
-# === Predictions ===
+# Predictions
 pred_output = trainer.predict(ds_test)
 y_true = pred_output.label_ids
 y_pred = np.argmax(pred_output.predictions, axis=1)
 probs = F.softmax(torch.tensor(pred_output.predictions), dim=1).numpy()
 
-# === 1. Confusion Matrix ===
+# 1. Confusion Matrix
 cm = confusion_matrix(y_true, y_pred)
 disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=["Merkel", "SPD"])
 fig_cm, ax_cm = plt.subplots()
@@ -41,7 +41,7 @@ ax_cm.set_title("Confusion Matrix – Merkel vs SPD")
 plt.savefig("../results/unbalanced data/confusion_matrix.png", dpi=300)
 plt.show()
 
-# === 2. Confidence Histogram ===
+# 2. Confidence Histogram
 fig_hist, ax_hist = plt.subplots()
 ax_hist.hist(probs[:, 0], bins=50, alpha=0.6, label="Confidence: Merkel", color="blue")
 ax_hist.hist(probs[:, 1], bins=50, alpha=0.6, label="Confidence: SPD", color="red")
@@ -53,7 +53,7 @@ ax_hist.grid(True)
 plt.savefig("../results/unbalanced data/confidence_histogram.png", dpi=300)
 plt.show()
 
-# === 3. Baseline Comparison Bar Chart ===
+# 3. Baseline Comparison Bar Chart
 # BERT scores
 bert_acc = accuracy_score(y_true, y_pred)
 bert_f1 = f1_score(y_true, y_pred, average="weighted")
@@ -102,7 +102,7 @@ plt.savefig("../results/unbalanced data/model_comparison.png", dpi=300)
 plt.show()
 
 report = classification_report(y_true, y_pred, target_names=["Merkel", "SPD"])
-print("📄 Per-Class Classification Report:")
+print("Per-Class Classification Report:")
 print(report)
 
 # Optional: save report to .txt file for your poster

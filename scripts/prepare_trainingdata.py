@@ -27,6 +27,6 @@ os.makedirs("../data/final", exist_ok=True)
 train_df.to_csv("../data/final/train.csv", index=False)
 test_df.to_csv("../data/final/test.csv", index=False)
 
-print("✅ Train/test split completed!")
+print("Train/test split completed!")
 print(f"Train set: {len(train_df)} entries")
 print(f"Test set: {len(test_df)} entries")
