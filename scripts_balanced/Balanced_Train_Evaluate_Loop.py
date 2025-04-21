@@ -22,7 +22,7 @@ tokenizer = BertTokenizer.from_pretrained("bert-base-german-cased")
 all_results = []
 
 for run in range(1, 6):
-    print(f"\n🔁 Starting Run {run}/5")
+    print(f"\n Starting Run {run}/5")
 
     # 1. Balance data with different random sample
     df_spd_sampled = df_spd.sample(n=len(df_merkel), random_state=run)
@@ -61,7 +61,7 @@ for run in range(1, 6):
         per_device_train_batch_size=8,
         per_device_eval_batch_size=8,
         eval_strategy="epoch",
-        save_strategy="no",  #here I chose no since the data is way smaller so i didn't need to make sure to save inbetween
+        save_strategy="no",  #here I chose no, since the data is way smaller so I didn't need to make sure to save inbetween
         learning_rate=2e-5,
         weight_decay=0.01,
         logging_dir=f"{output_dir}/logs",

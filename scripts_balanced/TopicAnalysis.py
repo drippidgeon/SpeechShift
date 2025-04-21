@@ -25,7 +25,7 @@ summary_records = []
 
 # Evaluate each topic across all balanced models
 for run_id in range(1, 6):
-    print(f"\n🔄 Evaluating with model run {run_id}")
+    print(f"\n Evaluating with model run {run_id}")
 
     # Load model & tokenizer
     model_path = f"../models/bert-balanced-run{run_id}"
@@ -37,13 +37,13 @@ for run_id in range(1, 6):
     df_test = pd.read_csv(f"../data/final/balanced/run{run_id}/test.csv")
 
     for topic, keywords in topics.items():
-        print(f"\n🔎 Evaluating topic: {topic} (Run {run_id})")
+        print(f"\n Evaluating topic: {topic} (Run {run_id})")
 
         # Filter test data by keywords
         topic_df = df_test[df_test["text"].str.contains("|".join(keywords), case=False)]
 
         if topic_df.empty:
-            print(f"⚠️ No speeches found for {topic}, skipping.")
+            print(f"No speeches found for {topic}, skipping.")
             continue
 
         # Prepare dataset
@@ -60,7 +60,7 @@ for run_id in range(1, 6):
         acc = accuracy_score(y_true, y_pred)
         macro_f1 = f1_score(y_true, y_pred, average="macro")
 
-        print(f"✅ {topic} (Run {run_id}) - Accuracy: {acc:.4f}, Macro F1: {macro_f1:.4f}")
+        print(f" {topic} (Run {run_id}) - Accuracy: {acc:.4f}, Macro F1: {macro_f1:.4f}")
         report = classification_report(y_true, y_pred, target_names=["Merkel", "SPD"])
         print(report)
 

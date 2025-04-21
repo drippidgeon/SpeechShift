@@ -3,14 +3,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 
-# === Load CSV files ===
+# Load CSV files
 df_models = pd.read_csv("../results/balanced data/balanced_runs_summary.csv")
 df_topics = pd.read_csv("../results/balanced data/topic_analysis/summary_results.csv")
 
-# === Output directory ===
+# Output directory
 output_dir = "../results/balanced data/"
 
-# === 1. Plot mean accuracy and macro F1 of balanced model runs ===
+# 1. Plot mean accuracy and macro F1 of balanced model runs
 mean_accuracy = df_models["accuracy"].mean()
 mean_macro_f1 = df_models["f1_macro"].mean()
 
@@ -25,7 +25,7 @@ plt.tight_layout()
 plt.savefig(os.path.join(output_dir, "mean_balanced_model_performance.png"), dpi=300)
 plt.close()
 
-# === 2. Plot average macro F1 per topic ===
+# 2. Plot average macro F1 per topic  (The other Graph was A: hard to find, B: Not looking good)
 df_topic_avg = df_topics.groupby("topic").agg({"macro_f1": "mean"}).sort_values("macro_f1", ascending=True)
 
 plt.figure(figsize=(8, 6))

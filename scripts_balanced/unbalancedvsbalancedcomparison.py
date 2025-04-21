@@ -7,19 +7,19 @@ from datasets import Dataset
 from transformers import BertTokenizer, BertForSequenceClassification, Trainer
 from sklearn.metrics import accuracy_score, f1_score
 
-# === Paths ===
+# Paths
 test_path = "../data/final/balanced/run3/test.csv"  # You can change this
 balanced_model_path = "../models/bert-balanced-run3"
 unbalanced_model_path = "../models/bert-merkel-spd-final"
 
-# === Load test set ===
+# Load test set
 df_test = pd.read_csv(test_path)
 ds_test = Dataset.from_pandas(df_test)
 
-# === Tokenizer (same for both models) ===
+# Tokenizer (same for both models)
 tokenizer = BertTokenizer.from_pretrained(balanced_model_path)
 
-# === Tokenize test data ===
+# Tokenize test data
 ds_test = ds_test.map(lambda x: tokenizer(x["text"], padding=True, truncation=True, max_length=512), batched=True)
 ds_test.set_format("torch", columns=["input_ids", "attention_mask", "label"])
 
@@ -34,16 +34,16 @@ def evaluate_model(model_path):
     f1_weighted = f1_score(y_true, y_pred, average="weighted")
     return acc, f1_macro, f1_weighted
 
-# === Evaluate both models ===
+# Evaluate both models
 acc_bal, f1_macro_bal, f1_weighted_bal = evaluate_model(balanced_model_path)
 acc_unb, f1_macro_unb, f1_weighted_unb = evaluate_model(unbalanced_model_path)
 
-# === Print comparison ===
+# Print comparison
 print("Evaluation Summary:")
 print(f"Balanced BERT:   Accuracy={acc_bal:.4f} | Macro F1={f1_macro_bal:.4f} | Weighted F1={f1_weighted_bal:.4f}")
 print(f"Unbalanced BERT: Accuracy={acc_unb:.4f} | Macro F1={f1_macro_unb:.4f} | Weighted F1={f1_weighted_unb:.4f}")
 
-# === Plot
+# Plot
 labels = ["Balanced", "Unbalanced"]
 accs = [acc_bal, acc_unb]
 f1_macros = [f1_macro_bal, f1_macro_unb]
