@@ -10,6 +10,7 @@ https://www.goethe.de/ins/gb/de/kul/mag/20773671.html  or https://www.marx21.de/
 
 
 Missing Parts because of Size-issues : 
+
 Train.csv in data/final/unblanced
 
 df_spd.csv in data/filtered
